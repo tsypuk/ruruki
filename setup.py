@@ -39,7 +39,7 @@ auto_version_setup(
         "Topic :: Software Development :: Libraries",
     ],
     keywords=(
-        "graph db momory database in-memory snail extraction tool "
+        "graph db memory database in-memory snail extraction tool "
         "POC proof concept temporary lightweight"
     ),
     description=(
