@@ -2,9 +2,13 @@ language: python
 install:
   - pip install coveralls
   - pip install tox-travis
-env:
-  - TOXENV=py27
-  - TOXENV=py35
+- python:
+  - 2.7
+    env:
+      - TOXENV=py27
+  - 3.5
+    env:
+      - TOXENV=py35
 script:
   - mkdir docs/_static
   - tox
