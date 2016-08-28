@@ -6,16 +6,10 @@ matrix:
   include:
     - python: 2.7
       env:
-      - TOXENV=py27
-      - TOXENV=py27-lint
-      - TOXENV=py27-docs
-      - TOXENV=py27-behave
+      - TOXENV=py27,py27-lint,py27-docs,py27-behave
     - python: 3.5
       env:
-      - TOXENV=py35
-      - TOXENV=py35-lint
-      - TOXENV=py35-docs
-      - TOXENV=py35-behave
+      - TOXENV=py35,py35-lint,py35-docs,py35-behave
 script:
   - mkdir docs/_static
   - tox
