@@ -522,6 +522,12 @@ class EntitySet(interfaces.IEntitySet):
         else:
             raise KeyError("No such id {0!r} exists.".format(entity.ident))
 
+        # unbind the entity from the Graph
+        entity.graph = None
+
+        # remove the entity from the _all protected reference
+        self._prop_reference[entity.label]["_all"].discard(entity)
+
         collection = self._prop_reference[entity.label]
         for key in entity.properties:
             if key in collection:
