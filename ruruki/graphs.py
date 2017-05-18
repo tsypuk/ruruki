@@ -462,7 +462,8 @@ class Graph(interfaces.IGraph):
         self.edges.remove(edge)
 
     def remove_vertex(self, vertex):
-        if len(vertex.get_both_edges()) > 0:
+        count = len(vertex.get_both_edges())
+        if count > 0:
             raise interfaces.VertexBoundByEdges(
                 "Vertex {0!r} is still bound to another vertex "
                 "by an edge. First remove all the edges on the vertex and "
@@ -721,8 +722,8 @@ class PersistentGraph(Graph):
         super(PersistentGraph, self).add_vertex_constraint(label, key)
         with open(self.vertices_constraints_path, "w") as constraint_fh:
             data = []
-            for label, key in self.get_vertex_constraints():
-                data.append({"label": label, "key": key})
+            for const_label, const_key in self.get_vertex_constraints():
+                data.append({"label": const_label, "key": const_key})
             json.dump(data, constraint_fh, indent=4)
 
     def add_vertex(self, label=None, **kwargs):
