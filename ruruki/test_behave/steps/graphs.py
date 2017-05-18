@@ -42,6 +42,29 @@ def load_graph_dump_into_the_graph_obj(context):
     context.graph.load(context.dump_file)
 
 
+@when(u'we remove vertex "{text}"')
+def remove_vertex_from_graph(context, text):
+    v = context.graph.get_vertex(int(text))
+    context.removed_vertex = v
+    context.graph.remove_vertex(v)
+
+
+@then(
+    u'we expect the vertex "{text}" to be removed from the graph '
+    'vertices entity set'
+)
+def check_vertex_is_not_in_graph_after_removal(context, text):
+    v = context.removed_vertex
+    assert_that(
+        context.graph.get_vertices("facility").sorted()
+    ).does_not_contain(v)
+
+
+@then(u'we expect vertex "{text}" to be unbound')
+def check_removed_vertex_is_nolonger_bound_to_the_graph(context, text):
+    assert_that(context.removed_vertex.is_bound()).is_false()
+
+
 @then(u'we expect to have "{count}" edge')
 def check_edge_count(context, count):
     """
