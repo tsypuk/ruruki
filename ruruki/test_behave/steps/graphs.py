@@ -83,8 +83,8 @@ def step_impl(context, text):
     err = None
     try:
         context.graph.add_vertex("facility", uid=text)
-    except Exception as err:
-        err = err
+    except Exception as error:
+        err = error
     assert_that(err.__class__.__name__).is_equal_to("ConstraintViolation")
 
 
@@ -171,13 +171,13 @@ def check_new_edge_is_created(context, ident, head_ident, tail_ident, label):
 
 
 @then(u'when we add a another edge "{head_ident}"-["{label}"]->"{tail_ident}"  it raises a violation error')
-def step_impl(context, head_ident, label, tail_ident):
+def check_edge_violation(context, head_ident, label, tail_ident):
     err = None
     try:
         context.head = context.graph.get_vertex(int(head_ident))
         context.tail = context.graph.get_vertex(int(tail_ident))
         context.new_edge = context.graph.add_edge(context.head, label, context.tail)
-    except Exception as err:
-        err = err
+    except Exception as error:
+        err = error
     assert_that(err.__class__.__name__).is_equal_to("ConstraintViolation")
 
