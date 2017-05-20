@@ -461,6 +461,10 @@ class Graph(interfaces.IGraph):
         edge.tail.remove_edge(edge)
         self.edges.remove(edge)
 
+        # need to remove the edge from the internal constraints too
+        if (edge.head, edge.label, edge.tail) in self._econstraints:
+            del self._econstraints[(edge.head, edge.label, edge.tail)]
+
     def remove_vertex(self, vertex):
         count = len(vertex.get_both_edges())
         if count > 0:
@@ -470,6 +474,12 @@ class Graph(interfaces.IGraph):
                 "then remove it again.".format(vertex)
             )
         self.vertices.remove(vertex)
+
+        # need to remove the vertex from the internal constraints too
+        if vertex.label in self._vconstraints:
+            for key in self._vconstraints[vertex.label]:
+                if key in vertex.properties:
+                    self._vconstraints[vertex.label][key].discard(vertex)
 
     def close(self):  # pragma: no cover
         # Nothing to do for the close at this stage.
