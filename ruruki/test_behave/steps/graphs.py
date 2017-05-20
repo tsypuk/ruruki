@@ -65,6 +65,29 @@ def check_removed_vertex_is_nolonger_bound_to_the_graph(context, text):
     assert_that(context.removed_vertex.is_bound()).is_false()
 
 
+@when(u'we add a new vertex with constraint uid "{text}"')
+def add_new_vertext_with_constraint_of_deleted_vertex(context, text):
+    v = context.graph.add_vertex("facility", uid=text)
+    context.new_vertex = v
+
+
+@then(u'we expect the vertex with id "{ident}" to be added with constraint uid "{text}"')
+def step_impl(context, ident, text):
+    ident = int(ident)
+    assert_that(context.new_vertex.ident).is_equal_to(ident)
+    assert_that(context.new_vertex.properties["uid"]).is_equal_to(text)
+
+
+@then(u'when we try to add another vertex with uid "{text}" it raises a violation error')
+def step_impl(context, text):
+    err = None
+    try:
+        context.graph.add_vertex("facility", uid=text)
+    except Exception as err:
+        err = err
+    assert_that(err.__class__.__name__).is_equal_to("ConstraintViolation")
+
+
 @then(u'we expect to have "{count}" edge')
 def check_edge_count(context, count):
     """
@@ -124,3 +147,37 @@ def check_edge(context):
         assert_that(vertex.ident).is_equal_to(int(row["ident"]))
         assert_that(vertex.label).is_equal_to(row["label"])
         assert_that(vertex.properties).is_equal_to(eval(row["properties"]))
+
+
+@when(u'we remove edge "{head_ident}"-["{label}"]->"{tail_ident}"')
+def remove_edge(context, head_ident, label, tail_ident):
+    e = context.graph.get_edge(0)
+    context.graph.remove_edge(e)
+
+
+@when(u'we add a new edge "{head_ident}"-["{label}"]->"{tail_ident}"')
+def add_new_edge(context, head_ident, label, tail_ident):
+    context.head = context.graph.get_vertex(int(head_ident))
+    context.tail = context.graph.get_vertex(int(tail_ident))
+    context.new_edge = context.graph.add_edge(context.head, label, context.tail)
+
+
+@then(u'we expect the edge with id "{ident}", "{head_ident}"-["{label}"]->"{tail_ident}" to be added')
+def check_new_edge_is_created(context, ident, head_ident, tail_ident, label):
+    assert_that(context.new_edge.ident).is_equal_to(int(ident))
+    assert_that(context.new_edge.label).is_equal_to(label)
+    assert_that(context.new_edge.head.ident).is_equal_to(int(head_ident))
+    assert_that(context.new_edge.tail.ident).is_equal_to(int(tail_ident))
+
+
+@then(u'when we add a another edge "{head_ident}"-["{label}"]->"{tail_ident}"  it raises a violation error')
+def step_impl(context, head_ident, label, tail_ident):
+    err = None
+    try:
+        context.head = context.graph.get_vertex(int(head_ident))
+        context.tail = context.graph.get_vertex(int(tail_ident))
+        context.new_edge = context.graph.add_edge(context.head, label, context.tail)
+    except Exception as err:
+        err = err
+    assert_that(err.__class__.__name__).is_equal_to("ConstraintViolation")
+
