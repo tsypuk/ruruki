@@ -461,14 +461,25 @@ class Graph(interfaces.IGraph):
         edge.tail.remove_edge(edge)
         self.edges.remove(edge)
 
+        # need to remove the edge from the internal constraints too
+        if (edge.head, edge.label, edge.tail) in self._econstraints:
+            del self._econstraints[(edge.head, edge.label, edge.tail)]
+
     def remove_vertex(self, vertex):
-        if len(vertex.get_both_edges()) > 0:
+        count = len(vertex.get_both_edges())
+        if count > 0:
             raise interfaces.VertexBoundByEdges(
                 "Vertex {0!r} is still bound to another vertex "
                 "by an edge. First remove all the edges on the vertex and "
                 "then remove it again.".format(vertex)
             )
         self.vertices.remove(vertex)
+
+        # need to remove the vertex from the internal constraints too
+        if vertex.label in self._vconstraints:
+            for key in self._vconstraints[vertex.label]:
+                if key in vertex.properties:
+                    self._vconstraints[vertex.label][key].discard(vertex)
 
     def close(self):  # pragma: no cover
         # Nothing to do for the close at this stage.
@@ -721,8 +732,8 @@ class PersistentGraph(Graph):
         super(PersistentGraph, self).add_vertex_constraint(label, key)
         with open(self.vertices_constraints_path, "w") as constraint_fh:
             data = []
-            for label, key in self.get_vertex_constraints():
-                data.append({"label": label, "key": key})
+            for const_label, const_key in self.get_vertex_constraints():
+                data.append({"label": const_label, "key": const_key})
             json.dump(data, constraint_fh, indent=4)
 
     def add_vertex(self, label=None, **kwargs):

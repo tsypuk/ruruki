@@ -24,9 +24,9 @@ def auto_version_setup(**kwargs):
 auto_version_setup(
     name="ruruki",
     author="Jenda Mudron",
-    author_email="Jenda.Mudron@optiver.com.au",
+    author_email="jenmud@gmail.com",
     maintainer="Jenda Mudron",
-    maintainer_email="Jenda.Mudron@optiver.com.au",
+    maintainer_email="jenmud@gmail.com.au",
     url="https://github.com/optiver/ruruki",
     classifiers=[
         "Development Status :: 4 - Beta",
