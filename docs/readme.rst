@@ -84,14 +84,6 @@ Functionality still being worked on
 
 ~~~~~~~~~~~~~~~~~
 
-Demo
-----
-
-To see an online demo of `ruruki-eye <https://github.com/jenmud/ruruki-eye>`_ follow the following link http://www.ruruki.com.
-
-
-~~~~~~~~~~~~~~~~~
-
 Build and Testing Status
 ------------------------
 
