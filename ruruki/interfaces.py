@@ -2,7 +2,14 @@
 Database interfaces.
 """
 import abc
-from collections import MutableSet
+
+try:
+    # Python 3.10+
+    from collections.abc import MutableSet
+except ImportError:
+    # Python 3.10-
+    from collections import MutableSet
+
 from collections import namedtuple
 
 
